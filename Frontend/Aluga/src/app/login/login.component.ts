@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 
 @Component({
@@ -7,18 +8,16 @@ import { AuthService } from '../services/auth.service';
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent {
-  username: string = '';
-  password: string = '';
+  username = '';
+  password = '';
 
-  constructor(private authService: AuthService) { }
+  constructor(private authService: AuthService, private router: Router) {}
 
-  login() {
-    const credentials = { username: this.username, password: this.password };
-    this.authService.login(credentials).subscribe(response => {
-      console.log('Login bem-sucedido', response);
-      // Gerenciar o token de autenticação, se necessário
-    }, error => {
-      console.error('Erro de login', error);
-    });
+  onLogin() {
+    if (this.authService.login(this.username, this.password)) {
+      this.router.navigate(['/protected']);
+    } else {
+      alert('Credenciais inválidas');
+    }
   }
 }
